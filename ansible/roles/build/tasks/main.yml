@@ -23,7 +23,7 @@
 - name: Clone Site Web repository
   ansible.builtin.git:
     repo: 'git@github.com:quent36987/cybermaniac-site-web.git'
-    dest: ./repo/cybermaniac-site-web
+    dest: /repo/cybermaniac-site-web
     clone: yes
     update: yes
     accept_hostkey: yes
@@ -35,7 +35,7 @@
     force_source: yes
     build:
       dockerfile: Dockerfile-ansible
-      path: ./repo/cybermaniac-site-web
+      path: /repo/cybermaniac-site-web
       args:
         PUBLIC_STORE_URL: "https://boutique.cybermaniacfr"
     source: build
@@ -59,8 +59,8 @@
 #    source: build
 
 #
-#- name: Start Docker containers using docker-compose
-#  community.docker.docker_compose:
-#      project_src: ./docker-compose.yml
-#      state: present
-#      restarted: yes
+- name: Start Docker containers using docker-compose
+  community.docker.docker_compose:
+      project_src: ./docker-compose.yml
+      state: present
+      restarted: yes

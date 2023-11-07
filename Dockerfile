@@ -1,12 +1,11 @@
 # Utiliser une image de base Python slim pour un conteneur léger
-FROM python:3.9-slim-bullseye
+FROM python:3.9.18-slim-bullseye
 
 # Installer les dépendances nécessaires
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     apt-utils \
     gcc \
-    python3-dev \
     libffi-dev \
     libssl-dev \
     libkrb5-dev \
