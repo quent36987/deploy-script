@@ -1,0 +1,13 @@
+- hosts: local
+  become: yes
+  vars_files:
+    - ./passwords/env.yml
+  roles:
+    - build
+
+#- hosts: server
+#  become: yes
+#  vars_files:
+#    - ./passwords/env.yml
+#  roles:
+#    - launch
