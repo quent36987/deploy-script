@@ -2,11 +2,11 @@
 #- name: Clone Store repository
 #  ansible.builtin.git:
 #    repo: 'git@github.com:quent36987/cybermaniac-store.git'
-#    dest: ./repo/cybermaniac-store
+#    dest: /repo/cybermaniac-store
 #    clone: yes
 #    update: yes
 #    accept_hostkey: yes
-#    key_file: /home/quentin/.ssh/id_ed25519
+#    key_file: /root/.ssh/id_ed25519
 #
 #- name: Build Store image
 #  community.docker.docker_image:
@@ -20,25 +20,25 @@
 #        GATSBY_STORE_URL: "https://admin.cybermaniacouioi"
 #    source: build
 #
-#- name: Clone Site Web repository
-#  ansible.builtin.git:
-#    repo: 'git@github.com:quent36987/cybermaniac-site-web.git'
-#    dest: ./repo/cybermaniac-site-web
-#    clone: yes
-#    update: yes
-#    accept_hostkey: yes
-#    key_file: /home/quentin/.ssh/id_ed25519
-#
-#- name: Build Site Web image
-#  community.docker.docker_image:
-#    name: site-web-image:latest
-#    force_source: yes
-#    build:
-#      dockerfile: Dockerfile-ansible
-#      path: ./repo/cybermaniac-site-web
-#      args:
-#        PUBLIC_STORE_URL: "https://boutique.cybermaniacfr"
-#    source: build
+- name: Clone Site Web repository
+  ansible.builtin.git:
+    repo: 'git@github.com:quent36987/cybermaniac-site-web.git'
+    dest: ./repo/cybermaniac-site-web
+    clone: yes
+    update: yes
+    accept_hostkey: yes
+    key_file: /home/quentin/.ssh/id_ed25519
+
+- name: Build Site Web image
+  community.docker.docker_image:
+    name: site-web-image:latest
+    force_source: yes
+    build:
+      dockerfile: Dockerfile-ansible
+      path: ./repo/cybermaniac-site-web
+      args:
+        PUBLIC_STORE_URL: "https://boutique.cybermaniacfr"
+    source: build
 #
 #- name: Clone Backend repository
 #  ansible.builtin.git:
@@ -58,9 +58,9 @@
 #      path: ./repo/cybermaniac-backend
 #    source: build
 
-
-- name: Start Docker containers using docker-compose
-  community.docker.docker_compose:
-      project_src: ./docker-compose.yml
-      state: present
-      restarted: yes
+#
+#- name: Start Docker containers using docker-compose
+#  community.docker.docker_compose:
+#      project_src: ./docker-compose.yml
+#      state: present
+#      restarted: yes
