@@ -61,6 +61,6 @@
 #
 - name: Start Docker containers using docker-compose
   community.docker.docker_compose:
-      project_src: ./docker-compose.yml
+      project_src: /files/
       state: present
       restarted: yes

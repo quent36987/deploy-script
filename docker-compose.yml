@@ -9,3 +9,4 @@ services:
       - ./ansible:/ansible
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.ssh:/root/.ssh
+      - ./files:/files
