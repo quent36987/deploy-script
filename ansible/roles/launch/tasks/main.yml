@@ -17,8 +17,14 @@
     source: load
     load_path: ~/ansible/site-web-image_latest.tar
 
+- name: Install Docker module for Python
+  ansible.builtin.pip:
+    name: docker
+    executable: pip3  # Utilisez pip3 si Python 3 est utilisé
+
 - name: Start Docker containers on remote server
   community.docker.docker_compose:
     project_src:  ~/ansible
     project_name: project
     state: present
+    restarted: yes

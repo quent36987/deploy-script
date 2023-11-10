@@ -1,70 +1,43 @@
 ---
-#- name: Clone Store repository
-#  ansible.builtin.git:
-#    repo: 'git@github.com:quent36987/cybermaniac-store.git'
-#    dest: /repo/cybermaniac-store
-#    clone: yes
-#    update: yes
-#    accept_hostkey: yes
-#    key_file: /root/.ssh/id_ed25519
-#
-#- name: Build Store image
-#  community.docker.docker_image:
-#    name: store-image:latest
-#    force_source: yes
-#    build:
-#      path: ./repo/cybermaniac-store
-#      dockerfile: Dockerfile-ansible
-#      args:
-#        GATSBY_TELEMETRY_DISABLED: "1"
-#        GATSBY_STORE_URL: "https://admin.cybermaniacouioi"
-#    source: build
-#
-- name: Clone Site Web repository
+- name: Clone repositories
   ansible.builtin.git:
-    repo: 'git@github.com:quent36987/cybermaniac-site-web.git'
-    dest: /repo/cybermaniac-site-web
+    repo: '{{ item.repo.url }}'
+    dest: '{{ item.repo.dest }}'
     clone: yes
     update: yes
     accept_hostkey: yes
-    key_file: /home/quentin/.ssh/id_ed25519
+    key_file: '{{ item.repo.key_file }}'
+  loop: '{{ services }}'
+  loop_control:
+    loop_var: item
 
-- name: Build Site Web image
+- name: Build Docker images
   community.docker.docker_image:
-    name: site-web-image:latest
+    name: '{{ item.image.name }}:latest'
     force_source: yes
     build:
-      dockerfile: Dockerfile-ansible
-      path: /repo/cybermaniac-site-web
-      args:
-        PUBLIC_STORE_URL: "https://boutique.cybermaniacfr"
+      path: '{{ item.image.path }}'
+      dockerfile: '{{ item.image.dockerfile }}'
+      args: "{{ item.image.args | default({}) | to_json }}"
     source: build
+  loop: '{{ services }}'
+  loop_control:
+    loop_var: item
 
 - name: Save Docker image to tar file
   community.docker.docker_image:
-      name: site-web-image:latest
-      source: local
-      archive_path: /repo/cybermaniac-site-web/site-web-image_latest.tar
-#
-#- name: Clone Backend repository
-#  ansible.builtin.git:
-#    repo: 'git@github.com:quent36987/cybermaniac-backend.git'
-#    dest: ./repo/cybermaniac-backend
-#    clone: yes
-#    update: yes
-#    accept_hostkey: yes
-#    key_file: /home/quentin/.ssh/id_ed25519
-#
-#- name: Build Backend image
-#  community.docker.docker_image:
-#    name: cybermaniac-backend-image:latest
-#    force_source: yes
-#    build:
-#      dockerfile: Dockerfile-ansible
-#      path: ./repo/cybermaniac-backend
-#    source: build
+    name: '{{ item.image.name }}:latest'
+    source: local
+    archive_path: '{{ item.image.archive_path }}'
+  loop: '{{ services }}'
+  loop_control:
+    loop_var: item
 
-#
+
+
+
+
+
 - name: Start Docker containers using docker-compose
   community.docker.docker_compose:
       project_src: /files/
