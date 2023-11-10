@@ -39,6 +39,12 @@
       args:
         PUBLIC_STORE_URL: "https://boutique.cybermaniacfr"
     source: build
+
+- name: Save Docker image to tar file
+  community.docker.docker_image:
+      name: site-web-image:latest
+      source: local
+      archive_path: /repo/cybermaniac-site-web/site-web-image_latest.tar
 #
 #- name: Clone Backend repository
 #  ansible.builtin.git:

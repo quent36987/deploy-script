@@ -1,1 +1,24 @@
 ---
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: /files/docker-compose.yml
+    dest: ~/ansible
+    owner: quentin
+    mode: '0644'
+
+- name: Copy Docker image tar file to remote server
+  ansible.builtin.copy:
+    src: /repo/cybermaniac-site-web/site-web-image_latest.tar
+    dest: ~/ansible/site-web-image_latest.tar
+
+- name: Load Docker image on remote server
+  community.docker.docker_image:
+    name: site-web-image:latest
+    source: load
+    load_path: ~/ansible/site-web-image_latest.tar
+
+- name: Start Docker containers on remote server
+  community.docker.docker_compose:
+    project_src:  ~/ansible
+    project_name: project
+    state: present
