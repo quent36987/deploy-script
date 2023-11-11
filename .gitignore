@@ -1,3 +1,6 @@
 repo/
 .env
 .idea/
+seed-bdd/
+images/
+tmp

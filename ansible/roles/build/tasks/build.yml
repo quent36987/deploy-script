@@ -1,0 +1,49 @@
+---
+- name: Clone repositories
+  ansible.builtin.git:
+    repo: '{{ item.repo.url }}'
+    dest: '{{ item.repo.dest }}'
+    clone: yes
+    update: yes
+    accept_hostkey: yes
+    key_file: '{{ item.repo.key_file }}'
+  loop: '{{ services }}'
+  loop_control:
+    loop_var: item
+  when: item.repo is defined
+
+- name: Load seed-bdd with symbolic link
+  ansible.builtin.command:
+    cmd: cp -r /tmp/seed-bdd /files/postgres/
+
+
+- name: Build Docker images
+  community.docker.docker_image:
+    name: '{{ item.image.name }}:latest'
+    force_source: yes
+    build:
+      path: '{{ item.image.path }}'
+      dockerfile: '{{ item.image.dockerfile | default("Dockerfile") }}'
+      args: "{{ item.image.args | default({}) | to_json }}"
+    source: build
+  loop: '{{ services }}'
+  loop_control:
+    loop_var: item
+
+- name: Save Docker image to tar file
+  community.docker.docker_image:
+    name: '{{ item.image.name }}:latest'
+    source: local
+    archive_path: '{{ item.image.archive_path }}'
+  loop: '{{ services }}'
+  loop_control:
+    loop_var: item
+
+- name: Create Services Template
+  ansible.builtin.template:
+    src: templates/services.j2
+    dest: /files/services.txt
+
+
+
+

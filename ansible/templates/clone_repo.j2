@@ -1,9 +1,0 @@
----
-- name: Clone {{ item.name }} repository
-  ansible.builtin.git:
-    repo: '{{ item.repo }}'
-    dest: '{{ item.dest }}'
-    clone: yes
-    update: yes
-    accept_hostkey: yes
-    key_file: '{{ item.key_file }}'

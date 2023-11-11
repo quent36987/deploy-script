@@ -1,0 +1,39 @@
+---
+- name: Start Docker containers using docker-compose
+  community.docker.docker_compose:
+    state: present
+    restarted: yes
+    pull: yes
+    build: yes
+    project_name: project
+    definition:
+      services:
+        #  store:
+        #    image: store-image:latest
+        #    ports:
+        #      - "8000:8000"
+        #    networks:
+        #        - store-network
+        #    volumes:
+        #        - store-volume:/var/lib/postgresql/data
+
+        site-web:
+          image: "{{ SITE_WEB_IMAGE }}:latest"
+          ports:
+            - "3000:3000"
+      #
+      #  backend:
+      #    image: backend-image:latest
+      #    ports:
+      #      - "9000:9000"
+      #    networks:
+      #      - store-network
+      #
+      #networks:
+      #    store-network:
+      #
+      #volumes:
+      #    store-volume:
+      #
+
+

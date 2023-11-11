@@ -1,4 +1,10 @@
 ---
+ADMIN_URL: "https://admin.{{ DOMAIN }}"
+BOUTIQUE_URL: "https://boutique.{{ DOMAIN }}"
+SITE_WEB_URL: "https://{{ DOMAIN }}"
+
+SITE_WEB_IMAGE: "site-web-image"
+
 services:
   - name: Store
     repo:
@@ -11,7 +17,7 @@ services:
       dockerfile: Dockerfile-ansible
       args:
         GATSBY_TELEMETRY_DISABLED: "1"
-        GATSBY_STORE_URL: "https://admin.cybermaniacouioi"
+        GATSBY_STORE_URL: "{{ ADMIN_URL }}"
       archive_path: /repo/cybermaniac-store/store-image_latest.tar
 
   - name: Site Web
@@ -24,7 +30,7 @@ services:
       path: /repo/cybermaniac-site-web
       dockerfile: Dockerfile-ansible
       args:
-        PUBLIC_STORE_URL: "https://boutique.cybermaniacfr"
+        PUBLIC_STORE_URL: "{{ BOUTIQUE_URL }}"
       archive_path: /repo/cybermaniac-site-web/site-web-image_latest.tar
 
   - name: Backend
@@ -36,4 +42,10 @@ services:
       name: cybermaniac-backend-image
       path: /repo/cybermaniac-backend
       dockerfile: Dockerfile-ansible
-    archive_path: /repo/cybermaniac-backend/cybermaniac-backend-image_latest.tar
+      archive_path: /repo/cybermaniac-backend/cybermaniac-backend-image_latest.tar
+
+  - name: Postgres
+    image:
+      name: postgres-image
+      path: /files/postgres
+      archive_path: /repo/postgres_latest.tar
