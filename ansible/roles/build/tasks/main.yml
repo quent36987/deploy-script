@@ -35,11 +35,11 @@
 
 
 
-
-
-
-- name: Start Docker containers using docker-compose
-  community.docker.docker_compose:
-      project_src: /files/
-      state: present
-      restarted: yes
+#
+#
+#
+#- name: Start Docker containers using docker-compose
+#  community.docker.docker_compose:
+#      project_src: /files/
+#      state: present
+#      restarted: yes

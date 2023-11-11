@@ -1,6 +1,4 @@
 ---
-SITE_WEB_REPO: 'git@github.com:quent36987/cybermaniac-site-web.git'
-
 services:
   - name: Store
     repo:
@@ -18,7 +16,7 @@ services:
 
   - name: Site Web
     repo:
-      url: '{{ SITE_WEB_REPO }}'
+      url: 'git@github.com:quent36987/cybermaniac-site-web.git'
       dest: /repo/cybermaniac-site-web
       key_file: /home/quentin/.ssh/id_ed25519
     image:
