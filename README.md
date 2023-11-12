@@ -46,12 +46,14 @@
     -> envinoment: some env
 
 ## TODO
-
-- marcher le local
-- LANCER SUR OVH
 - refacto compose
 - mettre au propre histoire de sdonné
 - tt les infos dans un env propre
+- plusieur env fil plutot que all.yml ? services.yml ?
+- env avec les secrets
+- mettre les secret strip et a rien dans le local
+- test asnyc
+
 
 ## question
 > si 2 variable déclarer dans 2 inventory, le quel il prends, ca a du sens ?
