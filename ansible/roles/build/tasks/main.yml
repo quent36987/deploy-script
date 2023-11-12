@@ -1,4 +1,13 @@
 ---
+- name: Create required directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ PATH }}"
+    - "{{ IMAGES_REPOSITORY }}"
+    - "{{ GIT_REPOSITORY }}"
+
 - name: Build Tasks
   include_tasks: build.yml
 

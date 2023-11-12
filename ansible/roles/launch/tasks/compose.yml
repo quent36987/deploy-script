@@ -2,38 +2,146 @@
 - name: Start Docker containers using docker-compose
   community.docker.docker_compose:
     state: present
-    restarted: yes
-    pull: yes
+    #restarted: yes
+    #pull: yes
     build: yes
     project_name: project
     definition:
       services:
-        #  store:
-        #    image: store-image:latest
-        #    ports:
-        #      - "8000:8000"
-        #    networks:
-        #        - store-network
-        #    volumes:
-        #        - store-volume:/var/lib/postgresql/data
+        traefik:
+          image: "traefik:v2.5"
+          container_name: "traefik"
+          networks:
+            - store-network
+            - site-network
+            - traefik-network
+          ports:
+            - "80:80"
+            - "443:443"
+          labels:
+            - traefik.enable=true
+            - traefik.http.routers.traefik.rule=Host(`{{ MONITOR_DOMAIN }}`)
+            - traefik.http.routers.traefik.entrypoints=web-secure
+            - traefik.http.routers.traefik.tls=true
+            - traefik.docker.network=traefik-network
+            - traefik.http.routers.traefik.tls.certresolver=production
+            - traefik.http.routers.traefik.service=api@internal
+            - traefik.http.routers.traefik.middlewares=auth
+            - 'traefik.http.middlewares.auth.basicauth.users={{TRAEFIK_USER}}:{{TRAEFIK_PASSWORD}}'
+          volumes:
+            - '{{ PATH_DESTINATION }}/traefik/traefik.yml:/etc/traefik/traefik.yml'
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - '{{ PATH_DESTINATION }}/traefik/acme:/acme'
+          restart: unless-stopped
 
         site-web:
-          image: "{{ SITE_WEB_IMAGE }}:latest"
-          ports:
-            - "3000:3000"
-      #
-      #  backend:
-      #    image: backend-image:latest
-      #    ports:
-      #      - "9000:9000"
-      #    networks:
-      #      - store-network
-      #
-      #networks:
-      #    store-network:
-      #
-      #volumes:
-      #    store-volume:
-      #
+          image: "{{ SITE_WEB_IMAGE | quote }}:latest"
+          container_name: site-web
+          restart: unless-stopped
+          labels:
+            - traefik.enable=true
+            - traefik.http.routers.site-web.rule=Host(`{{ SITE_WEB_DOMAIN }}`)
+            - traefik.http.routers.site-web.entrypoints=web-secure
+            - traefik.http.routers.site-web.tls=true
+            - traefik.http.services.site-web.loadbalancer.server.port=3000
+            - traefik.docker.network=site-network
+            - traefik.http.routers.site-web.tls.certresolver=production
+          networks:
+            - site-network
+
+        backend:
+          image: "{{ BACKEND_IMAGE }}:latest"
+          container_name: backend
+          restart: unless-stopped
+          labels:
+            - traefik.enable=true
+            - traefik.http.routers.backend.rule=Host(`{{ ADMIN_DOMAIN }}`)
+            - traefik.http.routers.backend.entrypoints=web-secure
+            - traefik.http.routers.backend.tls=true
+            - traefik.http.services.backend.loadbalancer.server.port=9000
+            - traefik.docker.network=store-network
+            - traefik.http.routers.backend.tls.certresolver=production
+          networks:
+            - store-network
+          environment:
+            - DATABASE_URL=postgres://postgres:postgres@cyber-postgres:5432/medusa-db-yndhl
+            - STORE_CORS={{ BOUTIQUE_URL }}
+            - BACKEND_URL={{ ADMIN_URL }}
+            - REDIS_URL=redis://redis:6379
+            - STRIPE_PRIVATE_KEY={{STRIPE_PRIVATE_KEY}}
+            - STRIPE_WEBHOOK_SECRET={{STRIPE_WEBHOOK_SECRET}}
+            - STMP_PRIVATE_KEY={{STMP_PRIVATE_KEY}}
+            - MAIL_NOTIFICATION=quentin.goujon@epita.fr
+          volumes:
+            - '{{ PATH_DESTINATION }}/images/:/app/local_uploads/'
+            - upload_photos:/app/uploads
+          depends_on:
+            - cyber-postgres
+
+        frontend:
+          image: "{{ STORE_IMAGE }}:latest"
+          container_name: frontend
+          restart: unless-stopped
+          labels:
+            - traefik.enable=true
+            - traefik.http.routers.frontend.rule=Host(`{{ BOUTIQUE_DOMAIN }}`)
+            - traefik.http.routers.frontend.entrypoints=web-secure
+            - traefik.http.routers.frontend.tls=true
+            - traefik.http.services.frontend.loadbalancer.server.port=8000
+            - traefik.docker.network=store-network
+            - traefik.http.routers.frontend.tls.certresolver=production
+          networks:
+            - store-network
+
+        cyber-postgres:
+          image: "{{ POSTGRES_IMAGE }}:latest"
+          restart: unless-stopped
+          container_name: cyber-postgres
+          networks:
+            - store-network
+          environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=medusa-db-yndhl
+          volumes:
+            - postgres-data:/var/lib/postgresql/data
+          command: [ "sh", "/docker-entrypoint-initdb.d/init-db.sh" ]
+
+        redis:
+          image: redis:latest
+          container_name: redis
+          restart: unless-stopped
+          networks:
+            - store-network
+
+        pgadmin:
+          container_name: pgadmin4_container
+          image: dpage/pgadmin4
+          restart: always
+          environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: 220166
+            PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'False'
+            PGADMIN_CONFIG_WTF_CSRF_CHECK_DEFAULT: 'False'
+            PGADMIN_CONFIG_WTF_CSRF_ENABLE: 'False'
+          labels:
+            - traefik.enable=true
+            - traefik.http.routers.pgadmin.rule=Host(`{{ PGADMIN_DOMAIN }}`)
+            - traefik.http.routers.pgadmin.entrypoints=web-secure
+            - traefik.http.routers.pgadmin.tls=true
+            - traefik.http.services.pgadmin.loadbalancer.server.port=80
+            - traefik.docker.network=store-network
+            - traefik.http.routers.pgadmin.tls.certresolver=production
+          networks:
+            - store-network
+
+      volumes:
+        certs:
+        postgres-data:
+        upload_photos:
 
 
+      networks:
+        site-network:
+        store-network:
+        traefik-network:

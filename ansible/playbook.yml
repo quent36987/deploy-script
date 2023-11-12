@@ -3,6 +3,6 @@
   roles:
     - build
 
-#- hosts: server
-#  roles:
-#    - launch
+- hosts: server
+  roles:
+    - launch

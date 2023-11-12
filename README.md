@@ -1,14 +1,3 @@
-# LOCAL
-
--> Clone 4 repo github
--> build avec certaine env + stoquer images * 3
-
-# Sur mon serveur
-
--> envoi les images
--> clone repo reverse proxy
--> lance le script
-
 # Récapitulatif des services:
 
 ## 1. Site Web
@@ -55,3 +44,55 @@
     -> networks: store-network
     -> label: traefik
     -> envinoment: some env
+
+## TODO
+
+- marcher le local
+- LANCER SUR OVH
+- refacto compose
+- mettre au propre histoire de sdonné
+- tt les infos dans un env propre
+
+## question
+> si 2 variable déclarer dans 2 inventory, le quel il prends, ca a du sens ?
+
+## PROBLEME
+
+-> vaul tt cacher :)
+-> pull image ne marche pas ? :( suprimer tt avant de relancer ? ou comment forcer pull et build ?
+
+#sur machine
+sudo apt install -y python3-pip
+
+# scénario
+
+## 1. sur test serveur
+
+```shell
+docker exec -it ansible ansible-playbook  playbook.yml -i inventory/server/hosts -i inventory/local/hosts
+```
+
+Clone repo, build, tar image en local
+envoi sur le serveur de test, les images,
+la bdd de test et les différentes données ainsi que la config du proxy.
+lance le docker compose avec les bonne données et environnement
+
+## 2. sur prod serveur
+
+```shell
+docker exec -it ansible ansible-playbook  playbook.yml -i inventory/prod/hosts -i inventory/local/hosts
+```
+
+Clone repo, build, tar image en local
+envoi sur le serveur de prod et les différentes données ainsi que la config du proxy.
+lance le docker compose avec les bonne données et environnement
+
+## 3. en local ?
+
+```shell
+docker exec -it ansible ansible-playbook  playbook.yml -i inventory/local/hosts ...
+```
+
+Clone repo, build, tar image en local
+change le docker compose ainsi que la confid pour reverse traefik proxy local :)
+lance le docker compose avec les bonne données et environnement + donner de test en local

@@ -16,7 +16,6 @@
   ansible.builtin.command:
     cmd: cp -r /tmp/seed-bdd /files/postgres/
 
-
 - name: Build Docker images
   community.docker.docker_image:
     name: '{{ item.image.name }}:latest'
@@ -26,6 +25,7 @@
       dockerfile: '{{ item.image.dockerfile | default("Dockerfile") }}'
       args: "{{ item.image.args | default({}) | to_json }}"
     source: build
+  async: 600
   loop: '{{ services }}'
   loop_control:
     loop_var: item

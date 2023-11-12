@@ -2,12 +2,18 @@
 - name: Copy and load Docker image tar files on remote server
   ansible.builtin.copy:
     src: '{{ item.image.archive_path }}'
-    dest: '~/ansible/{{ item.name }}_latest.tar'
-  community.docker.docker_image:
-    name: '{{ item.image.name }}:latest'
-    source: load
-    load_path: '~/ansible/{{ item.name }}_latest.tar'
+    dest: '{{ PATH_DESTINATION }}/{{ item.image.name }}_latest.tar'
   loop: '{{ services }}'
   loop_control:
     loop_var: item
-  when: item.image_archive_path is defined
+  when: item.image.archive_path is defined
+
+- name: Load Docker images on remote server
+  community.docker.docker_image:
+    name: '{{ item.image.name }}:latest'
+    source: load
+    load_path: '{{ PATH_DESTINATION }}/{{ item.image.name }}_latest.tar'
+  loop: '{{ services }}'
+  loop_control:
+    loop_var: item
+  when: item.image.archive_path is defined
