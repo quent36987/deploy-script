@@ -32,7 +32,7 @@
     loop_var: item
   register: async_results
 
-- name: Check sync status
+- name: Check sync status (Build Docker images)
   async_status:
     jid: "{{ async_result_item.ansible_job_id }}"
   loop: "{{ async_results.results }}"
@@ -54,7 +54,7 @@
     loop_var: item
   register: async_results
 
-- name: Check sync status
+- name: Check sync status (Save Docker image to tar file)
   async_status:
     jid: "{{ async_result_item.ansible_job_id }}"
   loop: "{{ async_results.results }}"
@@ -68,6 +68,8 @@
   ansible.builtin.template:
     src: templates/services.j2
     dest: /files/services.txt
+
+
 
 
 

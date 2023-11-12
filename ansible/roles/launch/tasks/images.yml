@@ -1,5 +1,5 @@
 ---
-- name: Copy and load Docker image tar files on remote server
+- name: Copy Docker image tar files on remote server
   ansible.builtin.copy:
     src: '{{ item.image.archive_path }}'
     dest: '{{ PATH_DESTINATION }}/{{ item.image.name }}_latest.tar'
@@ -12,8 +12,15 @@
   community.docker.docker_image:
     name: '{{ item.image.name }}:latest'
     source: load
+    force_source: yes
+    force_tag: yes
     load_path: '{{ PATH_DESTINATION }}/{{ item.image.name }}_latest.tar'
   loop: '{{ services }}'
   loop_control:
     loop_var: item
   when: item.image.archive_path is defined
+
+- name: Remove unused Docker images
+  command: docker image prune -f
+  async: 300
+  poll: 0
