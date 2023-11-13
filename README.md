@@ -46,6 +46,8 @@
     -> envinoment: some env
 
 ## TODO
+test sur pc portable
+
 -> backup de bdd et d'images :) dans fichier /backup ou dest_path/backup ?
 -> si backup, copier mook data ? ou remplacer backup bah mock ? (sens ?)
 -> reduire taille image avec run en 1 ligne ? test avant apres ;)
