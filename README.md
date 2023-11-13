@@ -1,3 +1,7 @@
+# INSTALLATION
+
+need to put the ansible vault password in ansible/.passwords/vault.txt
+
 # Récapitulatif des services:
 
 ## 1. Site Web

@@ -21,17 +21,15 @@ RUN pip3 install --upgrade pip; \
     pip3 install jmspath; \
     pip3 install requests; \
     pip3 install ansible; \
-    pip3 install ansible-core;
+    pip3 install ansible-core; \
+    pip3 install docker; \
+    pip3 install docker-compose;
 
 #install git
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     git \
     && rm -rf /var/lib/apt/lists/*
-
-
-RUN pip3 install docker
-RUN pip3 install docker-compose
 
 
 COPY requirements.yml .
@@ -41,6 +39,3 @@ RUN ansible-galaxy install -r requirements.yml
 WORKDIR /ansible
 
 CMD ["tail", "-f", "/dev/null"]
-# Exécuter le playbook Ansible en utilisant l'inventaire par défaut
-#CMD ["ansible-playbook", "-i", "localhost/hosts", "playbook.yml", "--vault-password-file", "pass"]
-

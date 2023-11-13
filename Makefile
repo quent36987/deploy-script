@@ -5,11 +5,11 @@ copy:
 
 vault:
 	@echo "Create and chmod vault.txt"
-	@docker exec -it ansible chmod 600 .password/vault.txt
+	@docker exec -it ansible chmod 600 .passwords/vault.txt
 
 launch-ovh: copy vault
 	@echo "Launch playbook"
 	@docker exec -it ansible ansible-playbook ./playbooks/playbook.yml \
         -i inventory/local/hosts \
         -i inventory/server/hosts \
-        --vault-password-file .password/vault.txt
+        --vault-password-file .passwords/vault.txt
