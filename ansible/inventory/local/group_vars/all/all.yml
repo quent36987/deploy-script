@@ -19,49 +19,7 @@ POSTGRES_IMAGE: postgres-image
 PATH: "/cyber"
 IMAGES_REPOSITORY: "{{ PATH }}/images"
 GIT_REPOSITORY: "{{ PATH }}/repo"
+MOCK_DATA_REPOSITORY: "{{ PATH }}/mock_data"
 
 PATH_DESTINATION: "~/ansible"
 
-services:
-  - name: Store
-    repo:
-      url: 'git@github.com:quent36987/cybermaniac-store.git'
-      dest: "{{ GIT_REPOSITORY }}/cybermaniac-store"
-      key_file: /home/quentin/.ssh/id_ed25519
-    image:
-      name: "{{ STORE_IMAGE }}"
-      path: "{{ GIT_REPOSITORY }}/cybermaniac-store"
-      dockerfile: Dockerfile-ansible
-      args:
-        GATSBY_TELEMETRY_DISABLED: "1"
-        GATSBY_STORE_URL: "{{ ADMIN_URL }}"
-      archive_path: "{{ IMAGES_REPOSITORY }}/store-image_latest.tar"
-
-  - name: Site Web
-    repo:
-      url: 'git@github.com:quent36987/cybermaniac-site-web.git'
-      dest: "{{ GIT_REPOSITORY }}/cybermaniac-site-web"
-      key_file: /home/quentin/.ssh/id_ed25519
-    image:
-      name: "{{ SITE_WEB_IMAGE }}"
-      path: "{{ GIT_REPOSITORY }}/cybermaniac-site-web"
-      dockerfile: Dockerfile-ansible
-      args:
-        PUBLIC_STORE_URL: "{{ BOUTIQUE_URL }}"
-      archive_path: "{{ IMAGES_REPOSITORY }}/site-web-image_latest.tar"
-
-  - name: Backend
-    repo:
-      url: 'git@github.com:quent36987/cybermaniac-backend.git'
-      dest: "{{ GIT_REPOSITORY }}/cybermaniac-backend"
-      key_file: /home/quentin/.ssh/id_ed25519
-    image:
-      name: "{{ BACKEND_IMAGE }}"
-      path: "{{ GIT_REPOSITORY }}/cybermaniac-backend"
-      archive_path: "{{ IMAGES_REPOSITORY }}/backend-image_latest.tar"
-
-  - name: Postgres
-    image:
-      name: "{{ POSTGRES_IMAGE }}"
-      path: /files/postgres
-      archive_path: "{{ IMAGES_REPOSITORY }}/postgres-image_latest.tar"

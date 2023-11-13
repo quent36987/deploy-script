@@ -4,6 +4,8 @@ set -e
 PG_DATA_PATH="/var/lib/postgresql/data"
 SEED_PATH="/seed-bdd"
 
+find /seed-bdd -name .gitkeep -exec rm {} \;
+
 if [ ! -f "$PG_DATA_PATH/PG_VERSION" ]; then
     echo "Initialising database from seed..."
     cp -R "$SEED_PATH/"* "$PG_DATA_PATH/"

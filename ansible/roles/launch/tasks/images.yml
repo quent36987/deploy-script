@@ -1,4 +1,6 @@
 ---
+############# Copy Docker image tar files on remote server ###############
+
 - name: Copy Docker image tar files on remote server
   ansible.builtin.copy:
     src: '{{ item.image.archive_path }}'
@@ -7,6 +9,9 @@
   loop_control:
     loop_var: item
   when: item.image.archive_path is defined
+
+
+############### Load Docker images on remote server ################
 
 - name: Load Docker images on remote server
   community.docker.docker_image:
@@ -18,7 +23,22 @@
   loop: '{{ services }}'
   loop_control:
     loop_var: item
+  async: 300
+  poll: 0
   when: item.image.archive_path is defined
+  register: async_results
+
+- name: Check sync status (Load Docker images on remote server)
+  async_status:
+    jid: "{{ async_result_item.ansible_job_id }}"
+  loop: "{{ async_results.results }}"
+  loop_control:
+    loop_var: "async_result_item"
+  register: async_poll_results
+  until: async_poll_results.finished
+  retries: 30
+
+##############################################################
 
 - name: Remove unused Docker images
   command: docker image prune -f

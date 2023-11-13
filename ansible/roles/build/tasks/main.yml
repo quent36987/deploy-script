@@ -8,9 +8,17 @@
     - "{{ IMAGES_REPOSITORY }}"
     - "{{ GIT_REPOSITORY }}"
 
+- name: Create Services Template
+  ansible.builtin.template:
+    src: services.j2
+    dest: /tmp/services.txt
+
 - name: Build Tasks
   include_tasks: build.yml
 
-
-
-
+- name: Create a tar archive of Mock DATA files
+  ansible.builtin.archive:
+    path: "{{ MOCK_DATA_REPOSITORY }}"
+    dest: "{{ PATH }}/{{ archive_name }}"
+  vars:
+    archive_name: "mock_data_archive.tar"

@@ -46,24 +46,25 @@
     -> envinoment: some env
 
 ## TODO
-- refacto compose
-- mettre au propre histoire de sdonné
-- tt les infos dans un env propre
-- plusieur env fil plutot que all.yml ? services.yml ?
-- env avec les secrets
-- mettre les secret strip et a rien dans le local
-- test asnyc
+-> backup de bdd et d'images :) dans fichier /backup ou dest_path/backup ?
+-> si backup, copier mook data ? ou remplacer backup bah mock ? (sens ?)
+-> reduire taille image avec run en 1 ligne ? test avant apres ;)
+store-image      latest    af081da534bf   19 minutes ago      1.98GB
+backend-image    latest    183455247449   20 minutes ago      1.99GB
+postgres-image   latest    5a27f55eff9b   About an hour ago   236MB
+site-web-image   latest    b4caaa44385f   30 hours ago        437MB
 
-
+-> backup serveur en route aussi ? :)
+-> image dest dans path/dest/docker-images
+-> image store et back  change a chaque build ? why :) ?
+-> nv mot depasse ne marche pas :( openssl passwd -apr1
+-> bgf des motd e passe :)
 ## question
-> si 2 variable déclarer dans 2 inventory, le quel il prends, ca a du sens ?
+
 
 ## PROBLEME
 
--> vaul tt cacher :)
--> pull image ne marche pas ? :( suprimer tt avant de relancer ? ou comment forcer pull et build ?
-
-#sur machine
+# sur machine si pas python :)
 sudo apt install -y python3-pip
 
 # scénario

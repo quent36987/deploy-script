@@ -19,15 +19,22 @@
 - name: Uploading Images
   include_tasks: images.yml
 
-- name: Copy traefik.yml file on remote server
+- name: Copy traefik.yml config on remote server
   ansible.builtin.copy:
     src: /files/traefik
     dest: "{{ PATH_DESTINATION }}/"
 
-- name: Copy images file on remote server
+- name: Copy the tar archive to the remote server
   ansible.builtin.copy:
-    src: /tmp/images
+    src: "{{ PATH }}/mock_data_archive.tar"
     dest: "{{ PATH_DESTINATION }}/"
+
+- name: Extract the tar archive on the remote server
+  ansible.builtin.unarchive:
+    src: "{{ PATH_DESTINATION }}/mock_data_archive.tar"
+    dest: "{{ PATH_DESTINATION }}/"
+    remote_src: yes
+
 
 - name: Compose Tasks
   include_tasks: compose.yml

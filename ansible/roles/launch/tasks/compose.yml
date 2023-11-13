@@ -27,7 +27,7 @@
             - traefik.http.routers.traefik.tls.certresolver=production
             - traefik.http.routers.traefik.service=api@internal
             - traefik.http.routers.traefik.middlewares=auth
-            - 'traefik.http.middlewares.auth.basicauth.users={{TRAEFIK_USER}}:{{TRAEFIK_PASSWORD}}'
+            - traefik.http.middlewares.auth.basicauth.users={{ TRAEFIK_USER }}:{{ TRAEFIK_PASSWORD }}
           volumes:
             - '{{ PATH_DESTINATION }}/traefik/traefik.yml:/etc/traefik/traefik.yml'
             - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -73,7 +73,7 @@
             - STMP_PRIVATE_KEY={{STMP_PRIVATE_KEY}}
             - MAIL_NOTIFICATION=quentin.goujon@epita.fr
           volumes:
-            - '{{ PATH_DESTINATION }}/images/:/app/local_uploads/'
+            - '{{ PATH_DESTINATION }}/mock_data/images/:/app/local_uploads/'
             - upload_photos:/app/uploads
           depends_on:
             - cyber-postgres
@@ -105,6 +105,7 @@
             - POSTGRES_DB=medusa-db-yndhl
           volumes:
             - postgres-data:/var/lib/postgresql/data
+            - '{{ PATH_DESTINATION }}/mock_data/seed-bdd:/seed-bdd'
           command: [ "sh", "/docker-entrypoint-initdb.d/init-db.sh" ]
 
         redis:

@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     privileged: true
     volumes:
-      - ./ansible:/ansible
+      - ./ansible:/usr/ansible
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.ssh:/root/.ssh
       - ./files:/files
-      - ./tmp:/tmp
+      - ./mock_data:/cyber/mock_data

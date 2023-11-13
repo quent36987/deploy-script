@@ -12,9 +12,7 @@
     loop_var: item
   when: item.repo is defined
 
-- name: Load seed-bdd
-  ansible.builtin.command:
-    cmd: cp -r /tmp/seed-bdd /files/postgres/
+############# Build Docker images ###############
 
 - name: Build Docker images
   community.docker.docker_image:
@@ -40,7 +38,9 @@
     loop_var: "async_result_item"
   register: async_poll_results
   until: async_poll_results.finished
-  retries: 15
+  retries: 30
+
+############# Save Docker images to tar file ###############
 
 - name: Save Docker image to tar file
   community.docker.docker_image:
@@ -62,12 +62,10 @@
     loop_var: "async_result_item"
   register: async_poll_results
   until: async_poll_results.finished
-  retries: 15
+  retries: 30
 
-- name: Create Services Template
-  ansible.builtin.template:
-    src: templates/services.j2
-    dest: /files/services.txt
+
+
 
 
 
