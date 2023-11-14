@@ -23,7 +23,7 @@
   loop: '{{ services }}'
   loop_control:
     loop_var: item
-  async: 300
+  async: 500
   poll: 0
   when: item.image.archive_path is defined
   register: async_results
@@ -36,7 +36,8 @@
     loop_var: "async_result_item"
   register: async_poll_results
   until: async_poll_results.finished
-  retries: 30
+  retries: 40
+  delay: 10
 
 ##############################################################
 
