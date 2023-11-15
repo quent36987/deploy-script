@@ -2,4 +2,4 @@ DOMAIN: ovh.quentinou.ovh
 
 PATH_DESTINATION: "/home/ubuntu/cyber"
 PATH_BACKUP: "{{ PATH_DESTINATION }}/backup"
-PATH_IMAGES: "{{ PATH_DESTINATION }}/images"
+PATH_IMAGES: "{{ PATH_DESTINATION }}/docker-images"

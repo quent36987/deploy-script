@@ -51,16 +51,10 @@ need to put the ansible vault password in ansible/.passwords/vault.txt
 
 ## TODO
 
--> backup de bdd et d'images :) dans fichier /backup ou dest_path/backup ?
--> si backup, copier mook data ? ou remplacer backup bah mock ? (sens ?)
-
-
-
--> backup serveur en route aussi ? :)
--> image dest dans path/dest/docker-images
 -> image store et back  change a chaque build ? why :) ?
 -> nv mot depasse ne marche pas :( openssl passwd -apr1
--> bgf des motd e passe :)
+-> config pour lancer en local ? inventory local avec des value de base et du coup dmain : traefik.me etc
+
 ## question
 
 
@@ -69,35 +63,3 @@ need to put the ansible vault password in ansible/.passwords/vault.txt
 # sur machine si pas python :)
 sudo apt install -y python3-pip
 
-# scénario
-
-## 1. sur test serveur
-
-```shell
-docker exec -it ansible ansible-playbook  playbook.yml -i inventory/server/hosts -i inventory/local/hosts
-```
-
-Clone repo, build, tar image en local
-envoi sur le serveur de test, les images,
-la bdd de test et les différentes données ainsi que la config du proxy.
-lance le docker compose avec les bonne données et environnement
-
-## 2. sur prod serveur
-
-```shell
-docker exec -it ansible ansible-playbook  playbook.yml -i inventory/prod/hosts -i inventory/local/hosts
-```
-
-Clone repo, build, tar image en local
-envoi sur le serveur de prod et les différentes données ainsi que la config du proxy.
-lance le docker compose avec les bonne données et environnement
-
-## 3. en local ?
-
-```shell
-docker exec -it ansible ansible-playbook  playbook.yml -i inventory/local/hosts ...
-```
-
-Clone repo, build, tar image en local
-change le docker compose ainsi que la confid pour reverse traefik proxy local :)
-lance le docker compose avec les bonne données et environnement + donner de test en local
