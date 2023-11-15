@@ -50,15 +50,11 @@ need to put the ansible vault password in ansible/.passwords/vault.txt
     -> envinoment: some env
 
 ## TODO
-test sur pc portable
 
 -> backup de bdd et d'images :) dans fichier /backup ou dest_path/backup ?
 -> si backup, copier mook data ? ou remplacer backup bah mock ? (sens ?)
--> reduire taille image avec run en 1 ligne ? test avant apres ;)
-store-image      latest    af081da534bf   19 minutes ago      1.98GB
-backend-image    latest    183455247449   20 minutes ago      1.99GB
-postgres-image   latest    5a27f55eff9b   About an hour ago   236MB
-site-web-image   latest    b4caaa44385f   30 hours ago        437MB
+
+
 
 -> backup serveur en route aussi ? :)
 -> image dest dans path/dest/docker-images

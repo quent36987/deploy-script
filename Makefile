@@ -13,3 +13,9 @@ launch-ovh: copy vault
         -i inventory/local/hosts \
         -i inventory/server/hosts \
         --vault-password-file .passwords/vault.txt
+
+backup: copy vault
+	@echo "Launch playbook"
+	@docker exec -it ansible ansible-playbook ./playbooks/backup.yml \
+        -i inventory/server/hosts \
+        --vault-password-file .passwords/vault.txt

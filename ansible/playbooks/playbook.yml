@@ -4,5 +4,9 @@
     - build
 
 - hosts: server
+  become: yes
   roles:
-    - launch
+    - init
+    - backup
+    - run
+

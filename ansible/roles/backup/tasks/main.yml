@@ -1,0 +1,36 @@
+---
+- name: Définir la variable de date
+  ansible.builtin.set_fact:
+    backup_date: "{{ ansible_date_time.iso8601_basic }}"
+
+- name: Backup Postgres Data
+  docker_volume_info:
+    # FIXME PROJECT_NAME + _ + VOLUME_BDD
+    name: "project_postgres-data"
+  register: volume_info
+
+- name: Archiver postgres-data dans le dossier backup
+  archive:
+    path: "{{ volume_info.volume.Mountpoint }}"
+    dest: "{{ PATH_BACKUP }}/postgres-data-{{ backup_date }}.tar.gz"
+
+- name: Backup Images Data
+  docker_volume_info:
+    # FIXME PROJECT_NAME + _ + VOLUME_BDD
+    name: "project_upload_photos"
+  register: volume_info
+
+- name: Archiver upload_photos dans le dossier backup
+  archive:
+    path: "{{ volume_info.volume.Mountpoint }}"
+    dest: "{{ PATH_BACKUP }}/upload_photos-{{ backup_date }}.tar.gz"
+
+- name: Copier l'archive vers postgres-data-latest.tar.gz
+  command: >
+    cp {{ PATH_BACKUP }}/postgres-data-{{ backup_date }}.tar.gz \
+       {{ PATH_BACKUP }}/postgres-data-latest.tar.gz
+
+- name: Copier l'archive vers upload_photos-latest.tar.gz
+  command: >
+      cp {{ PATH_BACKUP }}/upload_photos-{{ backup_date }}.tar.gz \
+       {{ PATH_BACKUP }}/upload_photos-latest.tar.gz

@@ -1,0 +1,19 @@
+---
+- name: Install Docker module for Python
+  ansible.builtin.pip:
+    name: docker
+    executable: pip3
+
+- name: Install Docker Compose module for Python
+  ansible.builtin.pip:
+    name: docker-compose
+    executable: pip3
+
+- name: Create required directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ PATH_DESTINATION }}"
+    - "{{ PATH_BACKUP }}"
+    - "{{ PATH_IMAGES }}"
