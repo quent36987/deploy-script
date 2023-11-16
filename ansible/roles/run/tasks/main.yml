@@ -1,6 +1,7 @@
 ---
 - name: Uploading Images
   include_tasks: images.yml
+  when: inventory_hostname != 'localhost'
 
 - name: Copy traefik.yml config on remote server
   ansible.builtin.copy:
@@ -20,4 +21,5 @@
 
 - name: Compose Tasks
   include_tasks: compose.yml
+
 

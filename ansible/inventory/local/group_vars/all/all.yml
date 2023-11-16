@@ -1,4 +1,6 @@
 ---
+DOMAIN: "traefik.me"
+
 ADMIN_DOMAIN: "admin.{{ DOMAIN }}"
 BOUTIQUE_DOMAIN: "boutique.{{ DOMAIN }}"
 SITE_WEB_DOMAIN: "{{ DOMAIN }}"
@@ -21,5 +23,7 @@ IMAGES_REPOSITORY: "{{ PATH }}/images"
 GIT_REPOSITORY: "{{ PATH }}/repo"
 MOCK_DATA_REPOSITORY: "{{ PATH }}/mock_data"
 
-PATH_DESTINATION: "~/ansible"
+PATH_DESTINATION: "/home/ubuntu/cyber"
+PATH_BACKUP: "{{ PATH_DESTINATION }}/backup"
+PATH_IMAGES: "{{ PATH_DESTINATION }}/docker-images"
 

@@ -4,11 +4,15 @@
     state: present
     #restarted: yes
     #pull: yes
+    profiles:
+      - - "{{ 'server' if inventory_hostname != 'localhost' else 'local' }}"
     build: yes
     project_name: project
     definition:
       services:
         traefik:
+          profiles:
+            - server
           image: "traefik:v2.5"
           container_name: "traefik"
           networks:
@@ -33,6 +37,30 @@
             - /var/run/docker.sock:/var/run/docker.sock:ro
             - '{{ PATH_DESTINATION }}/traefik/acme:/acme'
           restart: unless-stopped
+
+        traefik-local:
+          profiles:
+            - local
+          container_name: traefik-local
+          image: traefik:v2.5.3
+          ports:
+            - 80:80
+            - 443:443
+            - 8080:8080
+          expose:
+            - 8080
+          labels:
+            - traefik.enable=true
+          restart: unless-stopped
+          volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - '{{ PATH_DESTINATION }}/traefik/traefik-local.yml:/etc/traefik/traefik.yml'
+            - '{{ PATH_DESTINATION }}/traefik/tls.yml:/etc/traefik/tls.yml'
+            - certs:/etc/ssl/traefik
+          networks:
+            - store-network
+            - site-network
+            - traefik-network
 
         site-web:
           image: "{{ SITE_WEB_IMAGE | quote }}:latest"

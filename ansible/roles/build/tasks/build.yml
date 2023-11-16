@@ -18,7 +18,6 @@
   community.docker.docker_image:
     name: '{{ item.image.name }}:latest'
     force_source: yes
-    force_tag: yes
     build:
       path: '{{ item.image.path }}'
       dockerfile: '{{ item.image.dockerfile | default("Dockerfile") }}'

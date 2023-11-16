@@ -1,6 +1,8 @@
 # INSTALLATION
 
 need to put the ansible vault password in ansible/.passwords/vault.txt
+use the make file to run the ansible playbook
+
 
 # Récapitulatif des services:
 
@@ -51,11 +53,7 @@ need to put the ansible vault password in ansible/.passwords/vault.txt
 
 ## TODO
 
--> image store et back  change a chaque build ? why :) ?
--> nv mot depasse ne marche pas :( openssl passwd -apr1
 -> config pour lancer en local ? inventory local avec des value de base et du coup dmain : traefik.me etc
-
-## question
 
 
 ## PROBLEME

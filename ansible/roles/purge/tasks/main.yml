@@ -1,0 +1,31 @@
+---
+- name: Get info on docker host and list images
+  docker_host_info:
+    containers: yes
+  register: containers_to_stop
+
+- name: Stop running docker containers
+  docker_container:
+    name: '{{ item.Names.0[1:] }}'
+    image: '{{ item.Image }}'
+    state: stopped
+  loop: '{{ containers_to_stop.containers }}'
+
+- name: Get info on docker host and list volumes
+  docker_host_info:
+    volumes: yes
+  register: containers_to_stop
+
+- name: Remove docker volumes
+  docker_volume:
+    name: '{{ item.Name }}'
+    state: absent
+  loop: '{{ containers_to_stop.volumes }}'
+
+- name: Prune everything
+  community.docker.docker_prune:
+    containers: true
+    images: true
+    networks: true
+    volumes: true
+    builder_cache: true
