@@ -5,7 +5,7 @@
     #restarted: yes
     #pull: yes
     profiles:
-      - - "{{ 'server' if inventory_hostname != 'localhost' else 'local' }}"
+      - "{{ 'server' if inventory_hostname != 'localhost' else 'local' }}"
     build: yes
     project_name: project
     definition:
@@ -61,6 +61,16 @@
             - store-network
             - site-network
             - traefik-network
+        traefik-reverse-proxy-https-helper:
+          profiles:
+            - local
+          container_name: traefik-reverse-proxy-https-helper
+          image: alpine
+          command: sh -c "cd /etc/ssl/traefik
+            && wget traefik.me/cert.pem -O cert.pem
+            && wget traefik.me/privkey.pem -O privkey.pem"
+          volumes:
+            - certs:/etc/ssl/traefik
 
         site-web:
           image: "{{ SITE_WEB_IMAGE | quote }}:latest"
@@ -96,9 +106,9 @@
             - STORE_CORS={{ BOUTIQUE_URL }}
             - BACKEND_URL={{ ADMIN_URL }}
             - REDIS_URL=redis://redis:6379
-            - STRIPE_PRIVATE_KEY={{STRIPE_PRIVATE_KEY}}
-            - STRIPE_WEBHOOK_SECRET={{STRIPE_WEBHOOK_SECRET}}
-            - STMP_PRIVATE_KEY={{STMP_PRIVATE_KEY}}
+            - STRIPE_PRIVATE_KEY={{ STRIPE_PRIVATE_KEY | default('') }}
+            - STRIPE_WEBHOOK_SECRET={{ STRIPE_WEBHOOK_SECRET | default('')}}
+            - STMP_PRIVATE_KEY={{ STMP_PRIVATE_KEY | default('')}}
             - MAIL_NOTIFICATION=quentin.goujon@epita.fr
           volumes:
             - '{{ PATH_DESTINATION }}/mock_data/images/:/app/local_uploads/'

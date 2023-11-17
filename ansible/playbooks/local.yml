@@ -1,6 +1,5 @@
 - hosts: local
   become: yes
   roles:
-    #- build
-    - init
+    - build
     - run

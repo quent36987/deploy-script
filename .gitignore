@@ -4,3 +4,4 @@ repo/
 tmp
 services.txt
 .passwords/
+local-files/

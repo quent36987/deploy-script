@@ -52,8 +52,8 @@ use the make file to run the ansible playbook
     -> envinoment: some env
 
 ## TODO
-
--> config pour lancer en local ? inventory local avec des value de base et du coup dmain : traefik.me etc
+- vault apsser en mode tt secret est chiffré et ajoute regle makefile pour chiffe et dechiffe
+  - mettre les autre variabel dans un autre env
 
 
 ## PROBLEME
